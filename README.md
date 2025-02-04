@@ -7,3 +7,4 @@ Analyze Investment Strategies
 - Mietänderung über Zeit
 - Kaufpreisänderung über Zeit
 - Monatliches Einkommen über Zeit
+- Kaufnebenkosten

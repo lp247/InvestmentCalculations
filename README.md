@@ -3,7 +3,7 @@ Analyze Investment Strategies
 
 ## Roadmap
 - Wertsteigerung der Immobilien
-- Mietänderung über Zeit
-- Kaufpreisänderung über Zeit
+- Miet- und Preisänderung Immobilie über Zeit
+- Instandhaltungskosten Immobilie über Zeit
 - Monatliches Einkommen über Zeit
 - Kaufnebenkosten

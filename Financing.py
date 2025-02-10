@@ -1,17 +1,21 @@
-class PropertyInvestment:
+from config import LOAN_INTEREST_RATE, INITIAL_LOAN_AMORTIZATION_RATE
+
+
+class Financing:
     def __init__(
         self,
         total_amount: int,
-        interest_rate: int,
-        initial_amortization_rate: int,
         deductible: int,
+        interest_rate=LOAN_INTEREST_RATE,
+        initial_amortization_rate=INITIAL_LOAN_AMORTIZATION_RATE,
     ):
         self._total_amount = total_amount
         self._interest_rate = interest_rate
+        self._initial_amortization_rate = initial_amortization_rate
         # Is it in reality really only divided by 12?
         self._annuity = (
             (total_amount - deductible)
-            * (interest_rate + initial_amortization_rate)
+            * (self._interest_rate + self._initial_amortization_rate)
             / 12
         )
         self._deductible = deductible

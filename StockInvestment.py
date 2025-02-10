@@ -1,15 +1,22 @@
+from Account import Account
+from config import AVERAGE_STOCK_RETURN
+
+
 class StockInvestment:
-    def __init__(self, expected_yield: int, initial: int):
+    def __init__(self, expected_yield=AVERAGE_STOCK_RETURN):
         self._investments = []
-        self.deposit(initial)
         self._expected_yield = expected_yield
 
-    def deposit(self, amount: int):
+    def _add_position(self, amount: int):
         self._investments.append({"base": amount, "current": amount})
 
-    def attempt_withdrawal(self, requested_amount: int) -> int:
+    def deposit(self, account: Account, amount: int):
+        amount = amount if amount >= 0 else account.get_balance()
+        self._add_position(amount)
+        account.withdraw(amount)
+
+    def attempt_withdrawal(self, account: Account, requested_amount: int) -> int:
         cnt = 0
-        tax = 0
         while cnt < requested_amount and len(self._investments) > 0:
             next_element = self._investments.pop(0)
             next_current = next_element["current"]
@@ -17,11 +24,10 @@ class StockInvestment:
             revenue = next_current - next_base
             amount_after_tax = 0.75 * revenue + next_base
             cnt += amount_after_tax
-            tax += next_current - amount_after_tax
         if cnt > requested_amount:
-            self.deposit(cnt - requested_amount)
+            self._add_position(cnt - requested_amount)
             cnt = requested_amount
-        print("Total Tax Paid: ", str(tax))
+        account.deposit(cnt)
         return cnt
 
     def get_value(self) -> int:

@@ -1,14 +1,17 @@
+from Clock import Clock, TimeVariant
 from config import LOAN_INTEREST_RATE, INITIAL_LOAN_AMORTIZATION_RATE
 
 
-class Financing:
+class Financing(TimeVariant):
     def __init__(
         self,
+        clock: Clock,
         total_amount: int,
         deductible: int,
         interest_rate=LOAN_INTEREST_RATE,
         initial_amortization_rate=INITIAL_LOAN_AMORTIZATION_RATE,
     ):
+        super().__init__(clock)
         self._total_amount = total_amount
         self._interest_rate = interest_rate
         self._initial_amortization_rate = initial_amortization_rate
@@ -48,7 +51,7 @@ class Financing:
     def get_remaining_loan(self):
         return self._remaining_loan
 
-    def step(self):
+    def onTick(self):
         remaining_loan = self.get_total_amount() - self.get_total_amortization()
         next_interest = remaining_loan * self._interest_rate / 12
         next_rate = min(self._annuity, remaining_loan + next_interest)

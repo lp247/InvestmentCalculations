@@ -1,9 +1,11 @@
 from Account import Account
+from Clock import Clock, TimeVariant
 from config import AVERAGE_STOCK_RETURN
 
 
-class StockInvestment:
-    def __init__(self, expected_yield=AVERAGE_STOCK_RETURN):
+class StockInvestment(TimeVariant):
+    def __init__(self, clock: Clock, expected_yield=AVERAGE_STOCK_RETURN):
+        super().__init__(clock)
         self._investments = []
         self._expected_yield = expected_yield
 
@@ -33,7 +35,7 @@ class StockInvestment:
     def get_value(self) -> int:
         return sum([x["current"] for x in self._investments])
 
-    def step(self):
+    def onTick(self):
         self._investments = list(
             map(
                 lambda x: {

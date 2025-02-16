@@ -1,4 +1,5 @@
 from Account import Account
+from Clock import TimeVariant
 from Financing import Financing
 from config import (
     PROPERTY_VALUE_INCREASE_PER_YEAR,
@@ -7,8 +8,9 @@ from config import (
 )
 
 
-class Property:
-    def __init__(self, area: int):
+class Property(TimeVariant):
+    def __init__(self, clock, area: int):
+        super().__init__(clock)
         self._price = area * PRICE_PER_SQUARE_METER
         self._rent = area * RENT_PER_SQUARE_METER
         self._owned = False
@@ -29,7 +31,7 @@ class Property:
         else:
             cash = account.get_balance()
             account.withdraw(cash)
-            self._financing = Financing(self.get_price(), cash)
+            self._financing = Financing(self.clock, self.get_price(), cash)
         self._owned = True
 
     def pay_costs(self, account: Account) -> int:
@@ -50,9 +52,7 @@ class Property:
         else:
             return 0
 
-    def step(self):
-        if self._financing is not None:
-            self._financing.step()
+    def onTick(self):
         self._price = self._price * (1 + PROPERTY_VALUE_INCREASE_PER_YEAR) ** (1 / 12)
         self._rent = self._rent * (1 + PROPERTY_VALUE_INCREASE_PER_YEAR) ** (1 / 12)
         pass

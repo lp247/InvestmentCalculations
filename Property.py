@@ -2,6 +2,9 @@ from Account import Account
 from Clock import TimeVariant
 from Financing import Financing
 from config import (
+    PROPERTY_PURCHASE_BROKERAGE,
+    PROPERTY_PURCHASE_NOTARY_COST_RATE,
+    PROPERTY_PURCHASE_TAX_RATE,
     PROPERTY_VALUE_INCREASE_PER_YEAR,
     RENT_PER_SQUARE_METER,
     PRICE_PER_SQUARE_METER,
@@ -28,7 +31,13 @@ class Property(TimeVariant):
         return self._owned
 
     def buy(self, account: Account):
-        if account.get_balance() >= self.get_total_value():
+        total_price = self.get_total_value() * (
+            1
+            + PROPERTY_PURCHASE_TAX_RATE
+            + PROPERTY_PURCHASE_NOTARY_COST_RATE
+            + PROPERTY_PURCHASE_BROKERAGE
+        )
+        if account.get_balance() >= total_price:
             account.withdraw(self.get_total_value())
         else:
             cash = account.get_balance()

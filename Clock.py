@@ -1,22 +1,13 @@
-from typing import Callable
+from typing import Callable, List
 
 
 class Clock:
     def __init__(self):
-        self.tickListener = []
+        self.tickListener: List[Callable[[], None]] = []
 
-    def listen(self, function: Callable):
+    def listen(self, function: Callable[[], None]):
         self.tickListener.append(function)
 
     def tick(self):
         for listener in self.tickListener:
             listener()
-
-
-class TimeVariant:
-    def __init__(self, clock: Clock):
-        self.clock = clock
-        clock.listen(self.onTick)
-
-    def onTick(self):
-        raise NotImplementedError

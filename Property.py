@@ -1,76 +1,54 @@
+from typing import TypedDict
 from Account import Account
-from Clock import TimeVariant
-from Financing import Financing
-from config import (
-    PROPERTY_PURCHASE_BROKERAGE,
-    PROPERTY_PURCHASE_NOTARY_COST_RATE,
-    PROPERTY_PURCHASE_TAX_RATE,
-    PROPERTY_VALUE_INCREASE_PER_YEAR,
-    RENT_PER_SQUARE_METER,
-    PRICE_PER_SQUARE_METER,
-    YEARLY_PROPERTY_MAINTENANCE_COSTS,
-)
+from Clock import Clock
+from ValuedEntity import ValuedEntity
 
 
-class Property(TimeVariant):
-    def __init__(self, clock, area: int):
+class PropertyContext(TypedDict):
+    area: float
+    price_per_square_meter: float
+    monthly_rent_per_square_meter: float
+    yearly_value_increase_percentage: float
+    yearly_maintenance_costs_percentage: float
+    property_purchase_tax_rate: float
+    property_purchase_notary_cost_rate: float
+    property_purchase_brokerage: float
+
+
+class Property(ValuedEntity):
+    def __init__(self, clock: Clock, context: PropertyContext):
         super().__init__(clock)
-        self._value = area * PRICE_PER_SQUARE_METER
-        self._rent = area * RENT_PER_SQUARE_METER
-        self._owned = False
-        self._financing = None
-        self._costs_paid = False
+        self.context: PropertyContext = context
+        self.value: float = context["area"] * context["price_per_square_meter"]
+        self.monthly_rent: float = (
+            context["area"] * context["monthly_rent_per_square_meter"]
+        )
+        self.owned: bool = False
 
-    def get_total_value(self) -> int:
-        return self._value
-
-    def get_rent(self) -> int:
-        return self._rent
-
-    def is_owned(self) -> bool:
-        return self._owned
+    def get_total_purchase_costs(self) -> float:
+        tax_rate = self.context["property_purchase_tax_rate"]
+        notary_costs_rate = self.context["property_purchase_notary_cost_rate"]
+        brokerage = self.context["property_purchase_brokerage"]
+        return self.value * (1 + tax_rate + notary_costs_rate + brokerage)
 
     def buy(self, account: Account):
-        total_price = self.get_total_value() * (
-            1
-            + PROPERTY_PURCHASE_TAX_RATE
-            + PROPERTY_PURCHASE_NOTARY_COST_RATE
-            + PROPERTY_PURCHASE_BROKERAGE
-        )
-        if account.get_balance() >= total_price:
-            account.withdraw(self.get_total_value())
-        else:
-            cash = account.get_balance()
-            account.withdraw(cash)
-            self._financing = Financing(self.clock, self.get_total_value(), cash)
-        self._owned = True
+        account.withdraw(self.get_total_purchase_costs())
+        self.owned = True
 
-    def pay_costs(self, account: Account) -> int:
-        if self.is_owned():
-            account.withdraw(
-                self.get_total_value() * YEARLY_PROPERTY_MAINTENANCE_COSTS / 12
+    def get_costs(self) -> float:
+        if self.owned:
+            maintenance_costs = (
+                self.value * self.context["yearly_maintenance_costs_percentage"] / 12
             )
-            if self._financing is not None:
-                account.withdraw(self._financing.get_rate())
+            return maintenance_costs
         else:
-            account.withdraw(self.get_rent())
-        self._costs_paid = True
+            return self.monthly_rent
 
-    def get_owned_value(self):
-        if self.is_owned() and self._financing is None:
-            return self.get_total_value()
-        elif self.is_owned() and self._financing is not None:
-            return (
-                self.get_total_value()
-                * self._financing.get_total_amortization()
-                / self._financing.get_total_amount()
-            )
-        else:
-            return 0
+    def get_value(self) -> float:
+        return self.value if self.owned else 0
 
     def onTick(self):
-        if not self._costs_paid:
-            raise Exception("Costs for property not paid!")
-        self._value = self._value * (1 + PROPERTY_VALUE_INCREASE_PER_YEAR) ** (1 / 12)
-        self._rent = self._rent * (1 + PROPERTY_VALUE_INCREASE_PER_YEAR) ** (1 / 12)
-        self._costs_paid = False
+        super().onTick()
+        inc = self.context["yearly_value_increase_percentage"]
+        self.value = self.value * (1 + inc) ** (1 / 12)
+        self.monthly_rent = self.monthly_rent * (1 + inc) ** (1 / 12)

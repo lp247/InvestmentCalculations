@@ -3,7 +3,7 @@ from typing import Any
 from Clock import Clock
 
 
-class ValuedEntity:
+class FinancialEntity:
     def __init__(self, clock: Clock):
         self.clock = clock
         # We generally start with costs being paid as there aren't any costs upon

@@ -1,7 +1,7 @@
 from typing import List, TypedDict
 from Account import Account
 from Clock import Clock
-from ValuedEntity import ValuedEntity
+from FinancialEntity import FinancialEntity
 
 
 class StockInvestmentContext(TypedDict):
@@ -13,7 +13,7 @@ class SingleInvestment(TypedDict):
     current: float
 
 
-class StockInvestment(ValuedEntity):
+class StockInvestment(FinancialEntity):
     def __init__(self, clock: Clock, context: StockInvestmentContext):
         super().__init__(clock)
         self.investments: List[SingleInvestment] = []

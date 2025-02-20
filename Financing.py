@@ -1,7 +1,7 @@
 from typing import TypedDict
 from Account import Account
 from Clock import Clock
-from ValuedEntity import ValuedEntity
+from FinancialEntity import FinancialEntity
 
 
 class FinancingContext(TypedDict):
@@ -9,7 +9,7 @@ class FinancingContext(TypedDict):
     initial_amortization_rate: float
 
 
-class Financing(ValuedEntity):
+class Financing(FinancialEntity):
     def __init__(
         self,
         clock: Clock,

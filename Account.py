@@ -1,9 +1,9 @@
 from __future__ import annotations
 from Clock import Clock
-from ValuedEntity import ValuedEntity
+from FinancialEntity import FinancialEntity
 
 
-class Account(ValuedEntity):
+class Account(FinancialEntity):
     def __init__(self, clock: Clock, initial: float):
         super().__init__(clock)
         self.balance = initial

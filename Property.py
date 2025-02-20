@@ -1,7 +1,7 @@
 from typing import TypedDict
 from Account import Account
 from Clock import Clock
-from ValuedEntity import ValuedEntity
+from FinancialEntity import FinancialEntity
 
 
 class PropertyContext(TypedDict):
@@ -15,7 +15,7 @@ class PropertyContext(TypedDict):
     property_purchase_brokerage: float
 
 
-class Property(ValuedEntity):
+class Property(FinancialEntity):
     def __init__(self, clock: Clock, context: PropertyContext):
         super().__init__(clock)
         self.context: PropertyContext = context

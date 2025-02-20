@@ -17,6 +17,7 @@ class Data(TypedDict):
     xlabel: str
     ylabel: str
     legend_loc: str
+    yscale: str
 
 
 def plot(data: Data):
@@ -35,6 +36,7 @@ def plot(data: Data):
     plt.ylabel(data["ylabel"])  # type: ignore
     plt.gca().set_xticks([i for i in range(0, lengthOfTime + 1, 120)])  # type: ignore
     plt.gca().set_xticklabels([str(i // 12) for i in range(0, lengthOfTime + 1, 120)])  # type: ignore
+    plt.yscale(data["yscale"])  # type: ignore
     plt.legend(loc=data["legend_loc"])  # type: ignore
     plt.grid(True)  # type: ignore
     plt.show()  # type: ignore

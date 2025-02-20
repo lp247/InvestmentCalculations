@@ -1,7 +1,7 @@
 import unittest
-from Account import Account
-from Clock import Clock
-from Financing import Financing, FinancingContext
+from .Account import Account
+from .Clock import Clock
+from .Financing import Financing, FinancingContext
 
 test_context: FinancingContext = {
     "interest_rate": 0.036,

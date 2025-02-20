@@ -1,7 +1,7 @@
 from typing import TypedDict
-from Account import Account
-from Clock import Clock
-from FinancialEntity import FinancialEntity
+from .Account import Account
+from .Clock import Clock
+from .FinancialEntity import FinancialEntity
 
 
 class PropertyContext(TypedDict):

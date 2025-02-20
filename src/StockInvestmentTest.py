@@ -1,7 +1,7 @@
 import unittest
-from Account import Account
-from Clock import Clock
-from StockInvestment import StockInvestment, StockInvestmentContext
+from .Account import Account
+from .Clock import Clock
+from .StockInvestment import StockInvestment, StockInvestmentContext
 
 test_context: StockInvestmentContext = {
     "expected_yield": 0.1,

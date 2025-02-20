@@ -1,6 +1,6 @@
 from typing import TypedDict
-from Clock import Clock
-from FinancialEntity import FinancialEntity
+from .Clock import Clock
+from .FinancialEntity import FinancialEntity
 
 
 class OtherCostsOfLivingContext(TypedDict):

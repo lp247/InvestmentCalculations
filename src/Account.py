@@ -1,6 +1,6 @@
 from __future__ import annotations
-from Clock import Clock
-from FinancialEntity import FinancialEntity
+from .Clock import Clock
+from .FinancialEntity import FinancialEntity
 
 
 class Account(FinancialEntity):

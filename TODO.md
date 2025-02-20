@@ -1,3 +1,4 @@
 - Andere Immobiliennebenkosten (Grundsteuer, Abfall, Versicherungen, etc.)
 - Unterscheidung zwischen Haus und Wohnung
 - Lebenshaltungskosten vom Gehalt abziehen
+- Nettogehalt aus Bruttogehalt ausrechnen

@@ -1,3 +1,4 @@
 - Andere Immobiliennebenkosten (Grundsteuer, Abfall, Versicherungen, etc.)
 - Unterscheidung zwischen Haus und Wohnung
 - Nettogehalt aus Bruttogehalt ausrechnen
+- Tilgungsrate dynamisch aussuchen

@@ -36,6 +36,8 @@ class Property(FinancialEntity):
         self.owned = True
 
     def get_costs(self) -> float:
+        if self.costs_paid:
+            return 0
         if self.owned:
             maintenance_costs = (
                 self.value * self.context["yearly_maintenance_costs_percentage"] / 12

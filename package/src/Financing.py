@@ -52,6 +52,8 @@ class Financing(FinancialEntity):
         return self._remaining_loan
 
     def get_costs(self) -> float:
+        if self.costs_paid:
+            return 0
         return self.get_rate()
 
     def get_value(self) -> float:

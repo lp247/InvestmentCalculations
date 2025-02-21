@@ -15,6 +15,8 @@ class OtherCostsOfLiving(FinancialEntity):
         self.costs = context["initial_costs"]
 
     def get_costs(self) -> float:
+        if self.costs_paid:
+            return 0
         return self.costs
 
     def get_value(self) -> float:

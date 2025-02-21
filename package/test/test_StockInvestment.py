@@ -5,6 +5,7 @@ from ..src.StockInvestment import StockInvestment, StockInvestmentContext
 
 test_context: StockInvestmentContext = {
     "expected_yield": 0.1,
+    "reinvest_interval": 1000000,
 }
 
 test_account_context: AccountContext = {
@@ -58,3 +59,16 @@ class StockInvestmentUnitTest(unittest.TestCase):
         withdrawal = inv.attempt_withdrawal(account, 1200)
         self.assertEqual(round(withdrawal, 2), 1200)
         self.assertEqual(round(inv.get_value(), 2), 1819.94)
+
+    def test_reinvesting(self):
+        test_context: StockInvestmentContext = {
+            "expected_yield": 0.1,
+            "reinvest_interval": 1,
+        }
+        clock = Clock()
+        account = Account(clock, test_account_context)
+        inv = StockInvestment(clock, test_context)
+        inv.deposit(account, 100000)
+        self.assertAlmostEqual(inv.get_value(), 100000, 2)
+        clock.tick()
+        self.assertAlmostEqual(inv.get_value(), 100598.06, 2)

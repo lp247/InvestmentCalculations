@@ -2,4 +2,3 @@
 - Unterscheidung zwischen Haus und Wohnung
 - Nettogehalt aus Bruttogehalt ausrechnen
 - Tilgungsrate dynamisch aussuchen
-- Aktien am Ende verkaufen und evtl. öfter zwischendurch

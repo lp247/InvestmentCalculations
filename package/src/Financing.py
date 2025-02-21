@@ -1,7 +1,7 @@
 from typing import TypedDict
 from .Account import Account
 from .Clock import Clock
-from .FinancialEntity import FinancialEntity
+from .FinancialEntity import FinancialEntity, NextStepData
 
 
 class FinancingContext(TypedDict):
@@ -21,12 +21,12 @@ class Financing(FinancialEntity):
         self.context = context
         self.total_amount = total_amount
 
-        self._rate = 0
-        self._interest = 0
-        self._amortization = 0
-        self._total_interest = 0
-        self._total_amortization = 0
-        self._remaining_loan = total_amount
+        self._rate: float = 0
+        self._interest: float = 0
+        self._amortization: float = 0
+        self._total_interest: float = 0
+        self._total_amortization: float = 0
+        self._remaining_loan: float = total_amount
 
         account.deposit(total_amount)
 
@@ -51,16 +51,10 @@ class Financing(FinancialEntity):
     def get_remaining_loan(self) -> float:
         return self._remaining_loan
 
-    def get_costs(self) -> float:
-        if self.costs_paid:
-            return 0
-        return self.get_rate()
-
     def get_value(self) -> float:
         return -1 * self.get_remaining_loan()
 
-    def onTick(self) -> None:
-        super().onTick()
+    def step(self) -> NextStepData:
         interest_rate = self.context["interest_rate"]
         initial_amortization_rate = self.context["initial_amortization_rate"]
         # Is it in reality really only divided by 12?
@@ -78,3 +72,5 @@ class Financing(FinancialEntity):
         self._total_interest = next_total_interest
         self._total_amortization = self.get_total_amount() - next_remaining_loan
         self._remaining_loan = next_remaining_loan
+
+        return {"costs": self._rate}

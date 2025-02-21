@@ -1,7 +1,7 @@
 from typing import TypedDict
 from .Account import Account
 from .Clock import Clock
-from .FinancialEntity import FinancialEntity
+from .FinancialEntity import FinancialEntity, NextStepData
 
 
 class PropertyContext(TypedDict):
@@ -35,22 +35,17 @@ class Property(FinancialEntity):
         account.withdraw(self.get_total_purchase_costs())
         self.owned = True
 
-    def get_costs(self) -> float:
-        if self.costs_paid:
-            return 0
+    def get_value(self) -> float:
+        return self.value if self.owned else 0
+
+    def step(self) -> NextStepData:
+        inc = self.context["yearly_value_increase_percentage"]
+        self.value = self.value * (1 + inc) ** (1 / 12)
+        self.monthly_rent = self.monthly_rent * (1 + inc) ** (1 / 12)
         if self.owned:
             maintenance_costs = (
                 self.value * self.context["yearly_maintenance_costs_percentage"] / 12
             )
-            return maintenance_costs
+            return {"costs": maintenance_costs}
         else:
-            return self.monthly_rent
-
-    def get_value(self) -> float:
-        return self.value if self.owned else 0
-
-    def onTick(self):
-        super().onTick()
-        inc = self.context["yearly_value_increase_percentage"]
-        self.value = self.value * (1 + inc) ** (1 / 12)
-        self.monthly_rent = self.monthly_rent * (1 + inc) ** (1 / 12)
+            return {"costs": self.monthly_rent}

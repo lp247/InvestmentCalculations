@@ -41,10 +41,16 @@ class PropertyUnitTest(unittest.TestCase):
         self.assertEqual(account.balance, 556000)
         self.assertTrue(prop.owned)
 
-    def test_get_costs(self):
+    def test_housing_costs_renting(self):
+        clock = Clock()
+        prop = Property(clock, test_context)
+        clock.tick()
+        self.assertAlmostEqual(prop.costs_to_pay, 1338.77, 2)
+
+    def test_housing_costs_owning(self):
         clock = Clock()
         account = Account(clock, test_account_context)
         prop = Property(clock, test_context)
-        self.assertAlmostEqual(prop.get_costs(), 1333.33, 2)
         prop.buy(account)
-        self.assertAlmostEqual(prop.get_costs(), 333.33, 2)
+        clock.tick()
+        self.assertAlmostEqual(prop.costs_to_pay, 334.69, 2)

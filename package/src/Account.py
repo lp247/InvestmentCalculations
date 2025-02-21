@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import TypedDict
 from .Clock import Clock
-from .FinancialEntity import FinancialEntity
+from .FinancialEntity import FinancialEntity, NextStepData
 
 
 class AccountContext(TypedDict):
@@ -21,14 +21,11 @@ class Account(FinancialEntity):
     def withdraw(self, amount: float):
         self.balance -= amount
 
-    def get_costs(self) -> float:
-        return 0
-
     def get_value(self) -> float:
         return self.balance
 
-    def onTick(self) -> None:
-        super().onTick()
+    def step(self) -> NextStepData:
         if self.balance < 0:
             overdraft_loan_rate = self.context["overdraft_loan_rate"]
             self.balance = self.balance * (1 + overdraft_loan_rate) ** (1 / 12)
+        return {"costs": 0}

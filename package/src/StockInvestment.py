@@ -1,7 +1,7 @@
 from typing import List, TypedDict
 from .Account import Account
 from .Clock import Clock
-from .FinancialEntity import FinancialEntity
+from .FinancialEntity import FinancialEntity, NextStepData
 
 
 class StockInvestmentContext(TypedDict):
@@ -42,14 +42,10 @@ class StockInvestment(FinancialEntity):
         account.deposit(cnt)
         return cnt
 
-    def get_costs(self) -> float:
-        return 0
-
     def get_value(self) -> float:
         return sum([x["current"] for x in self.investments])
 
-    def onTick(self) -> None:
-        super().onTick()
+    def step(self) -> NextStepData:
         self.investments = list(
             map(
                 lambda x: {
@@ -60,3 +56,4 @@ class StockInvestment(FinancialEntity):
                 self.investments,
             )
         )
+        return {"costs": 0}

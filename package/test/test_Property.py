@@ -1,7 +1,7 @@
 import unittest
-from .Account import Account
-from .Clock import Clock
-from .Property import Property, PropertyContext
+from ..src.Account import Account
+from ..src.Clock import Clock
+from ..src.Property import Property, PropertyContext
 
 test_context: PropertyContext = {
     "area": 100,

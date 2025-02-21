@@ -23,7 +23,8 @@ class StockInvestment(FinancialEntity):
         self.investments.append({"base": amount, "current": amount})
 
     def deposit(self, account: Account, amount: float) -> None:
-        amount = amount if amount >= 0 else account.balance
+        if amount <= 0:
+            raise Exception("Cannot deposit negative or zero values")
         self._add_position(amount)
         account.withdraw(amount)
 

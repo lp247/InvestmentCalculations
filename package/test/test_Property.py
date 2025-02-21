@@ -1,5 +1,5 @@
 import unittest
-from ..src.Account import Account
+from ..src.Account import Account, AccountContext
 from ..src.Clock import Clock
 from ..src.Property import Property, PropertyContext
 
@@ -14,22 +14,25 @@ test_context: PropertyContext = {
     "property_purchase_brokerage": 0.04,
 }
 
+test_account_context: AccountContext = {
+    "initial_cash": 1000000,
+    "overdraft_loan_rate": 0.1,
+}
+
 
 class PropertyUnitTest(unittest.TestCase):
     def test_inherent_value_and_rent(self):
         clock = Clock()
-        account = Account(clock, 1000000)
         prop = Property(clock, test_context)
         self.assertEqual(prop.value, 400000)
         self.assertAlmostEqual(prop.monthly_rent, 1333.33, 2)
-        prop.pay_costs(account)
         clock.tick()
         self.assertAlmostEqual(prop.value, 401629.65, 2)
         self.assertAlmostEqual(prop.monthly_rent, 1338.77, 2)
 
     def test_purchase(self):
         clock = Clock()
-        account = Account(clock, 1000000)
+        account = Account(clock, test_account_context)
         prop = Property(clock, test_context)
         self.assertEqual(prop.get_value(), 0)
         self.assertFalse(prop.owned)
@@ -40,7 +43,7 @@ class PropertyUnitTest(unittest.TestCase):
 
     def test_get_costs(self):
         clock = Clock()
-        account = Account(clock, 1000000)
+        account = Account(clock, test_account_context)
         prop = Property(clock, test_context)
         self.assertAlmostEqual(prop.get_costs(), 1333.33, 2)
         prop.buy(account)

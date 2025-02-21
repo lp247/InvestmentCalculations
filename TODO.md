@@ -4,4 +4,3 @@
 - Tilgungsrate dynamisch aussuchen
 - Aktien am Ende verkaufen und evtl. öfter zwischendurch
 - Geld aus Aktien ziehen, wenn Kosten nicht allein aus dem Einkommen bezahlt werden können
-- Geld ausleihen, wenn Geld gebraucht wird, aber keine Aktien mehr vorhanden sind
